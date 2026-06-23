@@ -1,0 +1,25 @@
+{
+  "name": "UnifiedModel MCP (Streamable HTTP)",
+  "image": "mcr.microsoft.com/devcontainers/go:1.22-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": {
+      "label": "UnifiedModel MCP (/mcp)",
+      "protocol": "http",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "go build -ldflags=\"-w -s\" -o ./bin/umodel-mcp ./cmd/umodel-mcp",
+  "postStartCommand": "nohup ./.devcontainer/run-mcp.sh > /tmp/umodel-mcp.log 2>&1 &",
+  "remoteEnv": {
+    "UMODEL_MCP_ALLOW_ALL_ORIGINS": "1"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["golang.go"]
+    }
+  }
+}

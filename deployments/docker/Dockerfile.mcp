@@ -1,0 +1,31 @@
+FROM golang:1.22 AS build
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY cmd ./cmd
+COPY internal ./internal
+COPY pkg ./pkg
+RUN CGO_ENABLED=0 go build -o /out/umodel-mcp ./cmd/umodel-mcp
+
+FROM debian:bookworm-slim
+WORKDIR /app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=build /out/umodel-mcp /usr/local/bin/umodel-mcp
+# Sample packs are read from disk at runtime (see internal/sampledata/service.go::repoPath),
+# so the examples tree must exist relative to WORKDIR (/app).
+COPY examples ./examples
+
+# ADP and other remote agent platforms connect over the network with a browser-style
+# Origin header. Relax the MCP Origin check so those cross-origin requests are accepted.
+ENV UMODEL_MCP_ALLOW_ALL_ORIGINS=1
+
+EXPOSE 8090
+ENTRYPOINT ["umodel-mcp"]
+CMD ["--transport", "http", \
+     "--addr", "0.0.0.0:8090", \
+     "--mcp-path", "/mcp", \
+     "--quickstart", \
+     "--quickstart-sample", "incident-investigation", \
+     "--graphstore", "memory"]
