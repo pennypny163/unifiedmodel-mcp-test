@@ -22,6 +22,7 @@ import type {
   WorkspaceMetadata,
   WriteResult,
 } from './types'
+import { staticDemoResponse } from './staticDemo'
 
 // REQUEST_TIMEOUT_MS bounds every API call so a hung request cannot leave the UI
 // stuck in a loading state forever.
@@ -186,6 +187,10 @@ export class UModelApi {
   }
 
   private async request<T>(path: string, init: { method?: string; body?: unknown } = {}): Promise<T> {
+    if (import.meta.env.VITE_STATIC_DEMO === 'true') {
+      return staticDemoResponse<T>(path, init.method || 'GET', init.body)
+    }
+
     let response: Response
     try {
       response = await fetch(`${this.baseUrl}${path}`, {

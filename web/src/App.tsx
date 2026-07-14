@@ -187,7 +187,7 @@ export function Brand({ compact = false }: { compact?: boolean }) {
       <div className="brand-mark">
         <img
           className="brand-logo-image"
-          src={compact ? '/openumodel-mark.svg' : '/openumodel-logo.svg'}
+          src={`${import.meta.env.BASE_URL}${compact ? 'openumodel-mark.svg' : 'openumodel-logo.svg'}`}
           alt=""
           draggable={false}
         />
