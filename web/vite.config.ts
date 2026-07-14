@@ -2,8 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 const apiTarget = process.env.UMODEL_API_TARGET || 'http://localhost:8080'
+const base = process.env.GITHUB_ACTIONS ? '/unifiedmodel-mcp-test/' : '/'
 
 export default defineConfig({
+  base,
   plugins: [react()],
   build: {
     chunkSizeWarningLimit: 900,
