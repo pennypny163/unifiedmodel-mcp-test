@@ -1,8 +1,9 @@
-export type WorkspaceView = 'umodel' | 'entityTopo' | 'query' | 'imports' | 'settings' | 'apiDebug'
+export type WorkspaceView = 'caseStudy' | 'umodel' | 'entityTopo' | 'query' | 'imports' | 'settings' | 'apiDebug'
 
 export const defaultWorkspaceView: WorkspaceView = 'umodel'
 
 export const workspaceViewSegments = {
+  caseStudy: 'case-study',
   umodel: 'umodel',
   entityTopo: 'entity-topo',
   query: 'query',

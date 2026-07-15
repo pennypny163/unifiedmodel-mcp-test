@@ -22,6 +22,18 @@ const workspace: WorkspaceMetadata = {
   updated_at: '2026-07-15T00:00:00Z',
 }
 
+const financeWorkspace: WorkspaceMetadata = {
+  id: 'finance-incident',
+  name: '金融案例：支付网关 SLO 故障排查',
+  description: '从支付告警到根因定位与受控回滚的 7 步 AI Agent 排查演练。',
+  labels: { industry: 'financial-services', scenario: 'incident-investigation', source: 'github-pages' },
+  paths: { root: '/examples/incident-investigation' },
+  status: 'active',
+  resource_version: 1,
+  created_at: '2026-07-15T00:00:00Z',
+  updated_at: '2026-07-15T00:00:00Z',
+}
+
 const umodel: UModelElement[] = [
   {
     kind: 'entity_set',
@@ -214,9 +226,11 @@ export async function staticDemoResponse<T>(path: string, method: string, body: 
   if (path === '/healthz') {
     result = health
   } else if (path.startsWith('/api/v1/workspaces?')) {
-    result = { items: [workspace] } satisfies Page<WorkspaceMetadata>
+    result = { items: [financeWorkspace, workspace] } satisfies Page<WorkspaceMetadata>
   } else if (path === '/api/v1/workspaces/demo' && method === 'GET') {
     result = workspace
+  } else if (path === '/api/v1/workspaces/finance-incident' && method === 'GET') {
+    result = financeWorkspace
   } else if (path.includes('/query/demo/execute')) {
     result = queryResult((body || { query: '' }) as QueryRequest)
   } else if (path.includes('/query/demo/explain')) {

@@ -9,6 +9,7 @@ import { formatError } from '../../lib/json'
 import type { WorkspaceView } from '../../routes'
 
 const UModelPage = lazy(() => import('../umodel/UModelPage').then(({ UModelPage }) => ({ default: UModelPage })))
+const FinanceCasePage = lazy(() => import('../caseStudy/FinanceCasePage').then(({ FinanceCasePage }) => ({ default: FinanceCasePage })))
 const EntityTopoPage = lazy(() => import('../entityTopo/EntityTopoPage').then(({ EntityTopoPage }) => ({ default: EntityTopoPage })))
 const QueryPage = lazy(() => import('../query/QueryPage').then(({ QueryPage }) => ({ default: QueryPage })))
 const ImportsPage = lazy(() => import('../imports/ImportsPage').then(({ ImportsPage }) => ({ default: ImportsPage })))
@@ -70,6 +71,8 @@ export function WorkspaceShell({
 
   const page = useMemo(() => {
     switch (view) {
+      case 'caseStudy':
+        return <FinanceCasePage />
       case 'umodel':
         return <UModelPage api={api} workspaceId={workspaceId} refreshToken={refreshToken} />
       case 'entityTopo':
@@ -96,7 +99,7 @@ export function WorkspaceShell({
   }, [api, onBack, onWorkspaceChange, refreshToken, view, workspace, workspaceId])
 
   const canvasHost = view === 'umodel' || view === 'entityTopo'
-  const topbarHidden = canvasHost || view === 'query' || view === 'imports' || view === 'settings' || view === 'apiDebug'
+  const topbarHidden = canvasHost || view === 'caseStudy' || view === 'query' || view === 'imports' || view === 'settings' || view === 'apiDebug'
 
   return (
     <div className={`workspace-shell app-shell ${sidebarCollapsed ? 'collapsed' : ''} ${canvasHost ? 'canvas-host' : ''}`}>
@@ -168,6 +171,8 @@ export function WorkspaceShell({
 
 function viewLabelKey(view: WorkspaceView): MessageKey {
   switch (view) {
+    case 'caseStudy':
+      return 'nav.umodel'
     case 'umodel':
       return 'nav.umodel'
     case 'entityTopo':

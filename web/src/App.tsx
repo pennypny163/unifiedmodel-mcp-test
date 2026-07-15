@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router'
-import { GitBranch, Layers, Network, PanelLeft, Settings2, TerminalSquare, UploadCloud } from 'lucide-react'
+import { BookOpenCheck, GitBranch, Layers, Network, PanelLeft, Settings2, TerminalSquare, UploadCloud } from 'lucide-react'
 import { UModelApi } from './api/client'
 import type { HealthResponse, WorkspaceMetadata } from './api/types'
 import { Button, Badge, StatusDot, Field, TextInput } from './design/components'
@@ -26,6 +26,7 @@ export function App() {
   const api = useMemo(() => new UModelApi(apiBase), [apiBase])
   const navItems = useMemo(
     () => [
+      { value: 'caseStudy' as const, label: '金融案例', icon: <BookOpenCheck size={16} /> },
       { value: 'umodel' as const, label: t('nav.umodel'), icon: <GitBranch size={16} /> },
       { value: 'entityTopo' as const, label: t('nav.entityTopo'), icon: <Network size={16} /> },
       { value: 'query' as const, label: t('nav.query'), icon: <TerminalSquare size={16} /> },
@@ -102,7 +103,7 @@ function LandingRoute({
       onHealthChange={onHealthChange}
       onOpenWorkspace={(nextWorkspace) => {
         onWorkspaceOpen(nextWorkspace)
-        navigate(workspacePath(nextWorkspace.id))
+        navigate(workspacePath(nextWorkspace.id, nextWorkspace.id === 'finance-incident' ? 'caseStudy' : defaultWorkspaceView))
       }}
     />
   )
@@ -110,7 +111,7 @@ function LandingRoute({
 
 function WorkspaceDefaultRedirect() {
   const { workspaceId } = useParams()
-  return <Navigate to={workspaceId ? workspacePath(workspaceId, defaultWorkspaceView) : '/'} replace />
+  return <Navigate to={workspaceId ? workspacePath(workspaceId, workspaceId === 'finance-incident' ? 'caseStudy' : defaultWorkspaceView) : '/'} replace />
 }
 
 function WorkspaceRoute({
